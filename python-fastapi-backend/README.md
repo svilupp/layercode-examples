@@ -144,7 +144,7 @@ UVICORN_RELOAD=0
 
 1. Go to [dash.layercode.com](https://dash.layercode.com/)
 2. Create a new agent
-3. Copy the agent ID to your `layercode.config.json`
+3. Copy the agent ID and add it to your `.env` file as `LAYERCODE_AGENT_ID`
 4. Configure the agent to use webhook URL (will be set up via tunnel)
 
 ## Running the Application
@@ -168,10 +168,10 @@ The server will start on `http://0.0.0.0:8000`
 The tunnel exposes your local server to Layercode's cloud platform:
 
 ```bash
-# If you did not set the agent ID in layercode.config.json
+# If you did not set LAYERCODE_AGENT_ID in .env
 npx @layercode/cli tunnel --agent=mxdi9mls --port=8000
 
-# Or if you have the agent ID saved in layercode.config.json:
+# Or if you have LAYERCODE_AGENT_ID set in .env:
 npx @layercode/cli tunnel --port=8000
 
 # Or using the Makefile
@@ -228,7 +228,6 @@ Once the tunnel is working, test your agent in the Layercode Playground:
 python-fastapi-backend/
 ├── main.py                 # FastAPI application and webhook handlers
 ├── layercode_sdk.py        # Layercode utilities (signature verification, streaming)
-├── layercode.config.json   # Agent configuration
 ├── pyproject.toml          # Python dependencies (uv)
 ├── .env                    # Environment variables (not in git)
 ├── Makefile                # Common commands
@@ -310,7 +309,7 @@ async def get_conversation_history(conversation_id: str) -> List[ModelMessage]:
 # Start the FastAPI server
 make server
 
-# Start the Layercode tunnel (requires agent_id in layercode.config.json)
+# Start the Layercode tunnel (requires LAYERCODE_AGENT_ID in .env)
 make tunnel
 
 # Format code with ruff
@@ -398,7 +397,7 @@ Add the secret to your `.env` file. Get it from the Layercode dashboard.
 
 3. **Common tunnel issues**:
    - Port 8000 is already in use (change with `--port=8001`)
-   - Agent ID is incorrect (check `layercode.config.json`)
+   - Agent ID is incorrect (check `LAYERCODE_AGENT_ID` in `.env`)
    - Outdated CLI (run `npx @layercode/cli@latest tunnel`)
    - Firewall blocking the connection
 
