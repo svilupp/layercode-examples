@@ -268,17 +268,12 @@ Your `/api/agent` endpoint receives these event types:
 
 ### Change the LLM Model
 
-Edit `main.py:26`:
-
 ```python
 # Use GPT-4
-TEXT_MODEL = "openai:gpt-4"
+TEXT_MODEL = "openai:gpt-5-nano"
 
-# Use Gemini
-TEXT_MODEL = "google-gemini:gemini-2.0-flash-exp"
-
-# Use Anthropic Claude
-TEXT_MODEL = "anthropic:claude-3-5-sonnet-20241022"
+# Use Gemini -- requires GEMINI_API_KEY in .env
+TEXT_MODEL = "google-gla:gemini-2.5-flash-lite" 
 ```
 
 ### Add Custom Tools
