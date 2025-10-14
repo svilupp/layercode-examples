@@ -1,0 +1,98 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "python-fastapi-backend"
+version = "0.1.0"
+description = "FastAPI backend for Layercode voice agent"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.119.0",
+    "httpx>=0.28.1",
+    "logfire[fastapi]>=4.13.2",
+    "loguru>=0.7.3",
+    "pydantic-ai>=1.0.18",
+    "python-dotenv>=1.1.1",
+    "uvicorn[standard]>=0.34.0",
+]
+
+[tool.setuptools]
+py-modules = ["main", "layercode_sdk"]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.8.4",
+    "mypy>=1.15.0",
+    "pytest>=8.3.4",
+    "pytest-asyncio>=0.25.2",
+    "types-requests>=2.32.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "N",      # pep8-naming
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "SIM",    # flake8-simplify
+    "TCH",    # flake8-type-checking
+    "RUF",    # Ruff-specific rules
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]  # unused imports in __init__.py
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_any_generics = false
+disallow_subclassing_any = false
+disallow_untyped_calls = false
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = false
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+follow_imports = "normal"
+ignore_missing_imports = false
+
+[[tool.mypy.overrides]]
+module = [
+    "logfire.*",
+    "pydantic_ai.*",
+    "pydantic.*",
+    "dotenv",
+    "httpx",
+    "fastapi.*",
+    "loguru",
+    "uvicorn",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
