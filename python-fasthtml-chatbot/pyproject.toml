@@ -1,0 +1,17 @@
+[project]
+name = "layercode-python-examples"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.28.1",
+    "pydantic-ai>=1.0.17",
+    "python-dotenv>=1.1.1",
+    "uvicorn>=0.37.0",
+    "python-fasthtml>=0.0.12",
+    "loguru>=0.7.3",
+    "logfire[fastapi]>=4.13.0",
+    "monsterui>=1.0.29",
+    "fastapi>=0.119.0",
+]

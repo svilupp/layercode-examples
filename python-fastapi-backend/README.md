@@ -185,7 +185,7 @@ This command will:
 - Keep the tunnel open while you develop
 
 **Important**:
-- Note the tunnel URL from the logs (e.g., `https://your-tunnel.layercode.dev`)
+- Note the tunnel URL from the logs (e.g., `https://your-tunnel.trycloudflare.com`)
 - When you're done, press `CTRL+C` in Terminal 2 to stop the tunnel
 
 ## Testing Your Agent
@@ -203,9 +203,9 @@ curl http://localhost:8000/health
 
 After starting the tunnel, test that it's properly forwarding requests:
 
-1. Look at the tunnel logs - you'll see a URL like: `https://your-tunnel.layercode.dev`
+1. Look at the tunnel logs - you'll see a URL like: `https://your-tunnel.trycloudflare.com`
 2. You can also find this URL in your [Layercode dashboard](https://dash.layercode.com/)
-3. Test the tunnel by visiting: `https://your-tunnel.layercode.dev/health`
+3. Test the tunnel by visiting: `https://your-tunnel.trycloudflare.com/health`
 4. You should see: `{"status":"ok"}`
 
 If the local test works but the tunnel test doesn't, check:
@@ -268,7 +268,7 @@ Your `/api/agent` endpoint receives these event types:
 ### Change the LLM Model
 
 ```python
-# Use GPT-4
+# Use GPT-5 nano (default)
 TEXT_MODEL = "openai:gpt-5-nano"
 
 # Use Gemini -- requires GEMINI_API_KEY in .env
