@@ -1,0 +1,25 @@
+{
+  "name": "voice-patterns",
+  "module": "src/server.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun --hot src/server.ts",
+    "start": "bun src/server.ts",
+    "test:webhook": "bash test/run-all.sh",
+    "benchmark": "bun run test/benchmark.ts",
+    "benchmark:quick": "bun run test/quick-test.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@ai-sdk/google": "^2.0.20",
+    "@layercode/node-server-sdk": "^1.2.2",
+    "ai": "^5.0.68",
+    "zod": "^4.1.12"
+  }
+}
