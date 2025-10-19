@@ -66,14 +66,47 @@ make tunnel  # Terminal 2
 # Open http://localhost:8000
 ```
 
+### 3. Fast-Slow Voice Patterns (TypeScript/Bun)
+
+**[fast-slow-voice-patterns/](./fast-slow-voice-patterns/)**
+
+Reference implementation demonstrating fast-slow model orchestration patterns for voice agents. Shows how to balance responsiveness with accuracy using Gemini 2.5 Flash Lite (fast) and Pro (slow) models.
+
+**Perfect for:**
+- Understanding fast-slow model orchestration
+- Optimizing voice agent response latency
+- Learning different streaming patterns for voice
+- Building production-ready voice applications
+
+**Features:**
+- Three multi-model patterns: Echo Relay, Shadow, and Speculative Answerer
+- Real benchmarking tools with TTFB metrics
+- TypeScript with Bun runtime
+- Layercode webhook integration
+- Structured output validation with Zod
+
+**Quick start:**
+```bash
+cd fast-slow-voice-patterns
+bun install
+bun run dev
+# Server starts on http://localhost:3000
+```
+
 ## Prerequisites
 
-All examples require:
+### Python Examples (FastAPI, FastHTML)
 - Python 3.10+
 - [uv](https://github.com/astral-sh/uv) - Fast Python package installer
-- A Layercode account - [Sign up here](https://dash.layercode.com/)
 - OpenAI API key (or another LLM provider)
 - Logfire token (free tier available at [logfire.pydantic.dev](https://logfire.pydantic.dev/))
+
+### TypeScript/Bun Examples (Fast-Slow Patterns)
+- Bun 1.2+ ([install](https://bun.sh))
+- Google AI API key ([get key](https://ai.google.dev))
+
+### All Examples
+- A Layercode account - [Sign up here](https://dash.layercode.com/)
 
 ## Getting Started
 
