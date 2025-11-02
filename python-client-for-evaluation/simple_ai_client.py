@@ -1,18 +1,59 @@
 #!/usr/bin/env python3
 """
-Layercode WebSocket client that runs a 3-turn AI customer conversation and streams replies via OpenAI TTS.
+LayerCode WebSocket client - AI-powered multi-turn conversations with observability.
 
-Workflow:
-1. Authorize with your backend (`SERVER_URL/session/authorized`).
-2. Connect to Layercode's frontend WebSocket using the returned `client_session_key`.
-3. Buffer each assistant turn (text + optional audio).
-4. Hand the turn to a polite “customer” agent (powered by pydantic-ai) that generates up to three replies.
-5. Synthesize each reply with OpenAI TTS, enforce 16‑bit mono PCM @ 8 kHz, and stream it back.
-6. Persist all inbound/outbound audio and log transcripts for debugging.
+Simulates realistic customer interactions using PydanticAI to generate contextual responses.
+Fully instrumented with Logfire for debugging and performance analysis.
 
-Usage:
-    python simple_ai_client.py --server-url http://localhost:8001 --agent-id YOUR_AGENT
-    # or export LAYERCODE_AGENT_ID before running
+WORKFLOW:
+    1. POST to backend /api/authorize with agent_id
+    2. Connect to LayerCode WebSocket
+    3. Send client.ready event
+    4. Wait for assistant turn (response.text + response.audio events)
+    5. Buffer assistant text and audio
+    6. When turn.start (role=user) fires:
+       a. Finalize assistant turn data
+       b. Pass assistant text to PydanticAI customer agent (gpt-5-nano)
+       c. Generate contextual reply based on conversation history
+       d. Synthesize reply via OpenAI TTS
+       e. Stream audio back as client.audio chunks
+    7. Repeat for max_user_turns (default: 3)
+    8. Wait for final assistant response, then shutdown
+
+AI CUSTOMER PERSONA:
+    - Name: Configurable (default: "Jan")
+    - Behavior: Polite shopper looking for a blazer
+    - Model: OpenAI gpt-5-nano via PydanticAI
+    - Memory: Full conversation history maintained
+
+OBSERVABILITY:
+    - Logfire integration for PydanticAI + OpenAI traces
+    - Request/response logging with token counts
+    - Audio buffer timing and sizes
+    - Turn-level event tracking
+
+REQUIREMENTS:
+    - Backend server at SERVER_URL with /api/authorize endpoint
+    - OPENAI_API_KEY for TTS + AI agent
+    - LOGFIRE_TOKEN (optional, for cloud tracing)
+    - LAYERCODE_AGENT_ID
+
+USAGE:
+    export OPENAI_API_KEY="sk-..."
+    export LOGFIRE_TOKEN="pylf_..."  # Optional
+    python simple_ai_client.py --agent-id YOUR_AGENT_ID --max-user-turns 5
+    python simple_ai_client.py --customer-name "Alice" --assistant-idle-timeout 5.0
+
+OUTPUTS:
+    - audio/input_TIMESTAMP.wav - AI-generated user audio (8kHz mono PCM)
+    - audio/output_TIMESTAMP.wav - Assistant responses (16kHz mono PCM)
+    - Logfire traces (if token configured)
+
+NOTE:
+    Script does NOT auto-terminate after sending all user turns. It waits for the
+    final assistant response before shutting down. For batch evaluation, modify
+    shutdown logic at simple_ai_client.py:525-527 to exit immediately after
+    max_user_turns is reached.
 """
 
 from __future__ import annotations

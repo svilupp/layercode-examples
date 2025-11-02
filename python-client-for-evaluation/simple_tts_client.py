@@ -1,16 +1,33 @@
 #!/usr/bin/env python3
 """
-Simple Layercode WebSocket client that generates user audio with OpenAI TTS.
+Simple LayerCode WebSocket client - OpenAI TTS-based audio input.
 
-This script emulates the browser Layercode SDK for local development:
-1. Authorizes a client session by calling the backend at SERVER_URL/session/authorized.
-2. Opens the Layercode frontend WebSocket with the returned client_session_key.
-3. Waits for the server to hand the turn to the user, synthesizes a TTS reply, then streams it as audio chunks.
-4. Logs inbound/outbound events, persisting assistant audio responses under audio/output_* and user audio under audio/input_*.
+Simulates a browser client by converting text to speech via OpenAI TTS API and streaming it.
 
-Usage:
-    python simple_client.py --server-url http://localhost:8001 --agent-id YOUR_AGENT
-    # or export LAYERCODE_AGENT_ID before running
+WORKFLOW:
+    1. POST to backend /api/authorize with agent_id
+    2. Receive client_session_key from backend
+    3. Connect to LayerCode WebSocket
+    4. Send client.ready event
+    5. Wait for turn.start event (role=user)
+    6. Synthesize text via OpenAI TTS (model: gpt-4o-mini-tts, voice: coral)
+    7. Convert audio to 16-bit mono PCM @ 8kHz
+    8. Stream as base64-encoded client.audio chunks
+    9. Capture and save assistant responses
+
+REQUIREMENTS:
+    - Backend server at SERVER_URL with /api/authorize endpoint
+    - OPENAI_API_KEY for TTS synthesis
+    - LAYERCODE_AGENT_ID
+
+USAGE:
+    export OPENAI_API_KEY="sk-..."
+    python simple_tts_client.py --agent-id YOUR_AGENT_ID
+    python simple_tts_client.py --default-reply "Hi, my name is Jan" --tts-voice alloy
+
+OUTPUTS:
+    - audio/input_TIMESTAMP.wav - Synthesized user audio (8kHz mono PCM)
+    - audio/output_TIMESTAMP.wav - Assistant responses (16kHz mono PCM)
 """
 
 from __future__ import annotations

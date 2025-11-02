@@ -1,16 +1,31 @@
 #!/usr/bin/env python3
 """
-Simple Layercode WebSocket file-based client.
+Simple LayerCode WebSocket client - File-based audio input.
 
-This script emulates the browser Layercode SDK for local development:
-1. Authorizes a client session by calling the backend at SERVER_URL/session/authorized.
-2. Opens the Layercode frontend WebSocket with the returned client_session_key.
-3. Waits for the server to hand the turn to the user, then streams a WAV file as audio chunks.
-4. Logs inbound/outbound events, persisting assistant audio responses under audio/output_*.
+Simulates a browser client by streaming pre-recorded WAV files to test LayerCode voice agents.
 
-Usage:
-    python simple_file_client.py --server-url http://localhost:8001 --agent-id YOUR_AGENT
-    # or export LAYERCODE_AGENT_ID before running
+WORKFLOW:
+    1. POST to backend /api/authorize with agent_id
+    2. Receive client_session_key from backend
+    3. Connect to LayerCode WebSocket (wss://api.layercode.com/v1/agents/web/websocket)
+    4. Send client.ready event
+    5. Wait for turn.start event (role=user)
+    6. Stream audio file as base64-encoded client.audio chunks
+    7. Capture response.audio events and save to audio/output_*.wav
+    8. Acknowledge audio playback with trigger.response.audio.replay_finished
+
+REQUIREMENTS:
+    - Backend server running at SERVER_URL with /api/authorize endpoint
+    - Input WAV: 16-bit mono PCM (any sample rate, typically 8kHz)
+    - Environment: LAYERCODE_AGENT_ID, SERVER_URL
+
+USAGE:
+    python simple_file_client.py --agent-id YOUR_AGENT_ID
+    python simple_file_client.py --audio-input custom.wav --chunk-ms 50
+
+OUTPUTS:
+    - audio/output_TIMESTAMP.wav - Assistant responses (16-bit mono PCM @ 16kHz)
+    - audio/input_TIMESTAMP.wav - Mirrored user input for debugging
 """
 
 from __future__ import annotations
