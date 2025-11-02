@@ -10,7 +10,35 @@
 
 Three Python scripts to programmatically test LayerCode voice agents by simulating browser clients via WebSocket connections. Each script implements a different user input strategy.
 
-**Prerequisites:** Requires a running LayerCode backend server. If you don't have one, use [layercode-create-app](https://github.com/svilupp/layercode-create-app).
+## Quick Start
+
+**1. Configure environment variables:**
+```bash
+# Set in .env file or export directly
+export LAYERCODE_AGENT_ID="agent_xxxxx"     # Required: from LayerCode dashboard
+export OPENAI_API_KEY="sk-..."              # Required for TTS + AI scripts
+export LOGFIRE_TOKEN="pylf_..."             # Optional for AI script
+export SERVER_URL="http://localhost:8001"   # Optional: defaults to localhost:8001
+```
+
+**2. Start a LayerCode backend (if you don't have one):**
+```bash
+uvx layercode-create-app run --tunnel
+```
+
+**3. Run any script with uv:**
+```bash
+# File-based client
+uv run simple_file_client.py
+
+# TTS client
+uv run simple_tts_client.py --default-reply "Hello, I need help"
+
+# AI client
+uv run simple_ai_client.py --max-user-turns 3
+```
+
+No need to install dependencies - `uv run` handles everything automatically.
 
 ## Architecture
 
@@ -66,16 +94,12 @@ Streams a pre-recorded WAV file as user input.
 
 **Use case:** Regression testing with fixed audio samples.
 
-**Input:** WAV file (default: `data/intro-example-8000hz.wav`)
-
-**Output:** Saves assistant audio to `audio/output_*.wav`
-
 ```bash
-python simple_file_client.py --agent-id YOUR_AGENT_ID
+uv run simple_file_client.py
 ```
 
 **Key parameters:**
-- `--audio-input PATH` - Input WAV file path
+- `--audio-input PATH` - Input WAV file path (default: `data/intro-example-8000hz.wav`)
 - `--chunk-ms 100` - Audio chunk duration (ms)
 - `--assistant-idle-timeout 3.0` - Wait time before triggering next turn (s)
 
@@ -86,13 +110,9 @@ Converts text to speech via OpenAI TTS and streams it.
 
 **Use case:** Scripted conversations with dynamic audio generation.
 
-**Input:** Text string (via `--default-reply` or `$DEFAULT_REPLY`)
-
-**Output:** Saves both user TTS audio (`audio/input_*.wav`) and assistant responses (`audio/output_*.wav`)
-
 ```bash
 export OPENAI_API_KEY="sk-..."
-python simple_tts_client.py \
+uv run simple_tts_client.py \
   --agent-id YOUR_AGENT_ID \
   --default-reply "Hello, I need help with my order"
 ```
@@ -110,14 +130,10 @@ Runs multi-turn conversations with PydanticAI-powered customer persona.
 
 **Use case:** Automated evaluation with AI-generated responses and Logfire observability.
 
-**Input:** AI agent generates contextual replies based on assistant responses
-
-**Output:** Audio artifacts + Logfire traces
-
 ```bash
 export OPENAI_API_KEY="sk-..."
 export LOGFIRE_TOKEN="pylf_..."  # Optional
-python simple_ai_client.py \
+uv run simple_ai_client.py \
   --agent-id YOUR_AGENT_ID \
   --max-user-turns 5 \
   --customer-name "Alice"
@@ -135,30 +151,9 @@ python simple_ai_client.py \
 
 ---
 
-## Setup
+## Configuration
 
-### 1. Install dependencies
-
-```bash
-cd python-client-for-evaluation
-pip install -r requirements.txt
-```
-
-**Note:** If `requirements.txt` is missing, install manually:
-
-```bash
-pip install httpx websockets loguru python-dotenv openai pydantic-ai logfire
-```
-
-### 2. Configure environment
-
-Copy `.env.example` to `.env`:
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env`:
+Environment variables (set in `.env` or pass via CLI flags):
 
 ```ini
 SERVER_URL="http://localhost:8001"      # Your backend server
@@ -167,24 +162,7 @@ OPENAI_API_KEY="sk-..."                 # For TTS + AI scripts
 LOGFIRE_TOKEN="pylf_..."                # Optional: for simple_ai_client.py
 ```
 
-### 3. Start your backend
-
-Ensure your LayerCode backend is running and accessible at `SERVER_URL`. The client expects a `/api/authorize` endpoint that accepts:
-
-```json
-POST /api/authorize
-{
-  "agent_id": "agent_xxxxx"
-}
-```
-
-Response:
-```json
-{
-  "client_session_key": "session_key_here",
-  "conversation_id": "optional_conversation_id"
-}
-```
+Run `uv run <script> --help` for all available options.
 
 ---
 

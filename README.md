@@ -1,6 +1,22 @@
 # Layercode Examples
 
-Production-ready examples for building voice AI agents with [Layercode](https://layercode.com). These examples demonstrate best practices for integrating Layercode's voice AI platform with Python backends.
+Examples for building voice AI agents with [Layercode](https://layercode.com). These examples demonstrate best practices for integrating Layercode's voice AI platform with Python backends.
+
+## Quick Start Tools
+
+Get started with LayerCode in seconds using these **unofficial** CLI tools:
+
+- **[layercode-create-app](https://github.com/svilupp/layercode-create-app)** - Scaffold a FastAPI backend with Cloudflare tunnel for instant testing
+  ```bash
+  uvx layercode-create-app run --tunnel
+  # Creates templated FastAPI server + automatic tunnel for debugging
+  ```
+
+- **[layercode-gym](https://github.com/svilupp/layercode-gym)** - Evaluate and test your voice agents
+  ```bash
+  uvx layercode-gym --text "Hello, I need help with my account"
+  # Run automated tests against your LayerCode agents
+  ```
 
 ## About Layercode
 
@@ -140,11 +156,33 @@ cp .env.example .env
 # 5. Run the application (see example-specific README)
 ```
 
+## Evaluation & Testing Tools
+
+### Python Client for Evaluation
+
+**[python-client-for-evaluation/](./python-client-for-evaluation/)**
+
+Programmatic test clients to evaluate LayerCode voice agents by simulating browser connections. Includes three strategies: file-based audio, OpenAI TTS synthesis, and AI-powered multi-turn conversations with PydanticAI.
+
+For production use, check out these official packages:
+
+- **[layercode-gym](https://github.com/svilupp/layercode-gym)** - Full evaluation framework for LayerCode agents
+  ```bash
+  uvx layercode-gym
+  ```
+
+- **[layercode-create-app](https://github.com/svilupp/layercode-create-app)** - CLI to scaffold LayerCode backends with tunneling
+  ```bash
+  uvx layercode-create-app
+  ```
+
 ## Resources
 
 - [Layercode Website](https://layercode.com)
 - [Layercode Documentation](https://layercode.mintlify.app/tutorials/getting-started)
 - [Layercode Dashboard](https://dash.layercode.com/)
+- [layercode-gym](https://github.com/svilupp/layercode-gym) - Agent evaluation framework
+- [layercode-create-app](https://github.com/svilupp/layercode-create-app) - Backend scaffolding CLI
 - [Pydantic-AI Documentation](https://ai.pydantic.dev/)
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
 - [FastHTML Documentation](https://docs.fastht.ml/)
